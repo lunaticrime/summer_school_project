@@ -1,35 +1,302 @@
-# AthenAI - Personalized Learning Path (MVP)
+# 🎓 AthenAI – AI-Powered Personalized Learning Path (MVP)
 
-Welcome to the **AthenAI** (formerly Fusion AI) MVP repository. This project is a hackathon prototype developed for the AUI AI Summer School 2026. 
+> AI-powered educational platform that analyzes student assessment results, identifies learning gaps, and automatically generates personalized learning plans requiring teacher validation before delivery.
 
-AthenAI is an AI-powered personalized learning platform that detects student skill gaps, generates targeted review plans, and allows teachers to review, modify, and validate these plans.
+Developed during the **AUI AI Summer School 2026 Hackathon**.
 
-## Project Structure
+---
 
-This repository contains two main parts:
-1. **Frontend (`/frontend`)**: A Next.js 14 App Router application containing the graphical interface for Students, Teachers, and Administrators. It includes mock data and a Groq-powered AI integration for the demo.
-2. **Architecture Documentation**: Contains the system design and JSON contracts (`Architecture_MVP_Personalized_Learning_Path_Fusion_AI.pdf` and `Architecture_MVP.txt`) that the real backend will use to process the workflows and orchestrate AI interactions.
+## 🚀 Overview
 
-## Running the Frontend Locally
+AthenAI is an AI-driven educational platform designed to help teachers provide personalized learning experiences at scale.
 
-To run the Next.js frontend locally:
+Instead of manually analyzing every student's weaknesses, the platform automatically:
 
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+- analyzes assessment results
+- detects skill gaps
+- prioritizes learning needs
+- generates personalized study plans using AI
+- allows teachers to review, regenerate or approve recommendations
+- tracks student progress through completion dashboards
 
-## Features & Dashboards
+The project follows an orchestrated workflow architecture built with Fusion AI.
 
-- **Student Dashboard**: Track learning progress, view skill breakdown, and monitor the personalized learning plan. Includes an AI diagnosis powered by the backend.
-- **Teacher Dashboard**: Review AI-generated learning plans for students. Teachers can approve, reject, or request the AI to regenerate the plan based on their comments (powered by Groq for the demo).
-- **Admin Dashboard**: Monitor global KPIs, skill gaps across the institution, and track plan statuses.
+---
+
+# ✨ Key Features
+
+## 📊 Student Analysis
+
+- Assessment validation
+- Score normalization
+- Skill gap detection
+- Priority calculation
+- AI pedagogical diagnosis
+
+---
+
+## 🤖 AI Learning Plan Generation
+
+The platform generates learning plans based on:
+
+- detected weaknesses
+- available learning resources
+- maximum daily workload
+- preferred study duration
+
+Each plan includes structured learning activities targeting the student's weakest skills.
+
+---
+
+## 👨‍🏫 Teacher Validation
+
+Teachers remain in control of the learning process.
+
+They can:
+
+- ✅ Approve a plan
+- 🔄 Request regeneration
+- ❌ Reject recommendations
+
+No learning plan is delivered before teacher approval.
+
+---
+
+## 📈 Progress Tracking
+
+Students can monitor:
+
+- completed activities
+- learning progress
+- completion percentage
+- current plan status
+
+Administrators can monitor institutional KPIs through dashboards.
+
+---
+
+# 🏗 Architecture
+
+The backend follows a multi-orchestrator architecture.
+
+```
+               Student Result
+                      │
+                      ▼
+             ORCH-01 Analysis
+                      │
+      ┌───────────────┴──────────────┐
+      ▼                              ▼
+ Validation                 Gap Detection
+                              │
+                              ▼
+                     AI Diagnosis
+                              │
+                              ▼
+             ORCH-02 Learning Plan
+                              │
+                              ▼
+                    Teacher Validation
+                              │
+             ┌────────────────┴───────────────┐
+             ▼                                ▼
+        Approved                      Regenerate
+             │
+             ▼
+      Student Notification
+             │
+             ▼
+        Progress Tracking
+```
+
+---
+
+# ⚙ Workflow Overview
+
+The MVP is composed of four orchestrators.
+
+| Orchestrator | Purpose |
+|--------------|----------|
+| ORCH-01 | Student result analysis |
+| ORCH-02 | AI learning plan generation |
+| ORCH-03 | Teacher decision & distribution |
+| ORCH-04 | Progress tracking & dashboard |
+
+Each orchestrator is divided into independent workflows, allowing modular execution and easier maintenance.
+
+---
+
+# 🗂 Main Workflows
+
+### ORCH-01
+
+- WF-01 Input Validation
+- WF-02 Result Storage
+- WF-03 Score Analysis
+- WF-04 AI Pedagogical Diagnosis
+
+---
+
+### ORCH-02
+
+- WF-05 Resource Selection
+- WF-06 AI Plan Generation
+- WF-07 Technical Validation
+
+---
+
+### ORCH-03
+
+- WF-08 Teacher Decision
+- WF-09 Plan Regeneration
+- WF-10 Student & Teacher Notification
+
+---
+
+### ORCH-04
+
+- WF-11 Progress Tracking
+- WF-12 Dashboard API
+
+---
+
+# 🛠 Tech Stack
+
+## Frontend
+
+- Next.js 14
+- React
+- TypeScript
+- Tailwind CSS
+
+## Backend (Architecture)
+
+- Fusion AI
+- Supabase
+- AI Agents
+- REST APIs
+- Workflow Orchestration
+
+## AI
+
+- Groq API (Hackathon Demo)
+- LLM-powered Diagnosis
+- Personalized Learning Plan Generation
+
+---
+
+# 📂 Repository Structure
+
+```
+.
+├── frontend/
+│   ├── app/
+│   ├── components/
+│   ├── public/
+│   └── ...
+│
+├── Architecture_MVP.txt
+├── Architecture_MVP_Personalized_Learning_Path_Fusion_AI.pdf
+└── README.md
+```
+
+---
+
+# 🚀 Getting Started
+
+Clone the repository
+
+```bash
+git clone https://github.com/<repo>.git
+```
+
+Navigate to the frontend
+
+```bash
+cd frontend
+```
+
+Install dependencies
+
+```bash
+npm install
+```
+
+Run locally
+
+```bash
+npm run dev
+```
+
+Open
+
+```
+http://localhost:3000
+```
+
+---
+
+# 📊 Dashboard Modules
+
+### Student Dashboard
+
+- Skill breakdown
+- AI diagnosis
+- Learning activities
+- Progress tracking
+
+### Teacher Dashboard
+
+- Review AI recommendations
+- Approve plans
+- Reject plans
+- Request regeneration
+
+### Administrator Dashboard
+
+- Global KPIs
+- Skill gap statistics
+- Student overview
+- Learning plan status
+
+---
+
+# 📚 Documentation
+
+Additional documentation can be found in:
+
+- `Architecture_MVP_Personalized_Learning_Path_Fusion_AI.pdf`
+- `Architecture_MVP.txt`
+
+These documents describe:
+
+- workflow contracts
+- orchestrators
+- Supabase schema
+- API payloads
+- validation rules
+- implementation roadmap
+
+---
+
+# 🔮 Future Improvements
+
+- Authentication
+- Real LMS integration
+- Multi-course support
+- Recommendation engine
+- Analytics dashboard
+- Email notifications
+- AI feedback improvement
+
+---
+
+# 👥 Team
+
+Developed during the **AUI AI Summer School 2026 Hackathon**.
+
+---
+
+# 📄 License
+
+This project was created for educational and demonstration purposes.
