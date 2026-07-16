@@ -198,15 +198,16 @@ export const MOCK_LEARNING_PLANS = [
   },
   {
     learning_plan_id: 203, plan_code: "PLAN-STD003-PYTHON", student_result_id: 103,
-    version: 2, duration_days: 7,
+    version: 3, duration_days: 5,
     plan_title: "Comprehensive Python Fundamentals Recovery",
-    objective_summary: "Address critical gaps in loops, functions, and logic.",
+    objective_summary: "Address critical gaps in loops, functions, and logic with shorter, focused exercises.",
     success_criteria_summary: "Achieve passing scores (50%+) on all three weak skills.",
     status: "pending_teacher_validation", teacher_decision: null,
     teacher_comment: null,
     completion_rate: 0, notification_status: null,
     student_code: "STD003", student_name: "Karim Idrissi",
     subject: "Python", priority_level: "high", global_score: 41,
+    created_at: "2026-07-15T14:00:00Z",
   },
   {
     learning_plan_id: 204, plan_code: "PLAN-STD005-PYTHON", student_result_id: 105,
@@ -219,6 +220,7 @@ export const MOCK_LEARNING_PLANS = [
     completion_rate: 0, notification_status: null,
     student_code: "STD005", student_name: "Omar Tazi",
     subject: "Python", priority_level: "high", global_score: 46,
+    created_at: "2026-07-13T09:00:00Z",
   },
   {
     learning_plan_id: 205, plan_code: "PLAN-STD007-PYTHON", student_result_id: 107,
@@ -231,18 +233,34 @@ export const MOCK_LEARNING_PLANS = [
     completion_rate: 25, notification_status: "sent",
     student_code: "STD007", student_name: "Mehdi Alaoui",
     subject: "Python", priority_level: "high", global_score: 41,
+    created_at: "2026-07-12T11:00:00Z",
   },
+  // STD003 version history: V1 (rejected) → V2 (regenerated, rejected) → V3 (current)
   {
-    learning_plan_id: 206, plan_code: "PLAN-STD003-PYTHON-V1", student_result_id: 103,
+    learning_plan_id: 206, plan_code: "PLAN-STD003-PYTHON", student_result_id: 103,
     version: 1, duration_days: 7,
-    plan_title: "Python Fundamentals Recovery (V1)",
-    objective_summary: "Initial plan addressing loops and functions.",
+    plan_title: "Python Fundamentals Recovery",
+    objective_summary: "Initial plan addressing loops and functions weaknesses.",
     success_criteria_summary: "Achieve 50%+ on loops and functions.",
     status: "rejected", teacher_decision: "reject",
-    teacher_comment: "Plan does not address logic gaps. Please regenerate.",
+    teacher_comment: "Plan does not address logic gaps. Please include logic exercises.",
     completion_rate: 0, notification_status: null,
     student_code: "STD003", student_name: "Karim Idrissi",
     subject: "Python", priority_level: "high", global_score: 41,
+    created_at: "2026-07-13T10:00:00Z",
+  },
+  {
+    learning_plan_id: 207, plan_code: "PLAN-STD003-PYTHON", student_result_id: 103,
+    version: 2, duration_days: 7,
+    plan_title: "Python Fundamentals Recovery (Revised)",
+    objective_summary: "Revised plan covering loops, functions, and logic with balanced exercises.",
+    success_criteria_summary: "Achieve 50%+ on loops, functions, and logic.",
+    status: "rejected", teacher_decision: "regenerate",
+    teacher_comment: "Réduire le plan à cinq jours et ajouter plus d'exercices pratiques.",
+    completion_rate: 0, notification_status: null,
+    student_code: "STD003", student_name: "Karim Idrissi",
+    subject: "Python", priority_level: "high", global_score: 41,
+    created_at: "2026-07-14T09:30:00Z",
   },
 ];
 
@@ -427,3 +445,17 @@ export const MOCK_DASHBOARD = {
     { student_code: "STD008", student_name: "Nadia Fassi", global_score: 77, main_gap: "Logic", priority_level: "low", plan_status: null, completion_rate: null },
   ],
 };
+
+// ─── Workflow Events (Trace Lineage) ─────────────────────────────
+export const MOCK_WORKFLOW_EVENTS = [
+  { id: 1, transaction_id: "TX-9001", correlation_id: "CORR-8001", workflow_id: "WF-01", student_id: 101, assessment_id: null, plan_id: null, event_type: "DATA_INGESTION_STARTED", status: "success", channel: "webhook", message: "Received student results payload", duration_ms: 120, created_at: "2026-07-13T09:00:00Z" },
+  { id: 2, transaction_id: "TX-9001", correlation_id: "CORR-8001", workflow_id: "WF-02", student_id: 101, assessment_id: null, plan_id: null, event_type: "SKILL_ANALYSIS_COMPLETED", status: "success", message: "Categorized 5 skills (3 gaps found)", duration_ms: 350, created_at: "2026-07-13T09:00:05Z" },
+  { id: 3, transaction_id: "TX-9001", correlation_id: "CORR-8001", workflow_id: "WF-04", student_id: 101, assessment_id: null, plan_id: null, event_type: "AI_DIAGNOSIS_GENERATED", status: "success", message: "Generated pedagogical diagnosis", duration_ms: 1250, created_at: "2026-07-13T09:00:15Z" },
+  { id: 4, transaction_id: "TX-9001", correlation_id: "CORR-8001", workflow_id: "WF-06", student_id: 101, assessment_id: null, plan_id: 201, event_type: "PLAN_GENERATED", status: "success", message: "Generated v1 plan with 3 activities", duration_ms: 2100, created_at: "2026-07-13T09:00:45Z" },
+  { id: 5, transaction_id: "TX-9002", correlation_id: "CORR-8002", workflow_id: "WF-08", student_id: 101, assessment_id: null, plan_id: 201, event_type: "TEACHER_VALIDATION", status: "success", channel: "ui", message: "Teacher approved plan", duration_ms: 85, created_at: "2026-07-13T10:30:00Z" },
+  { id: 6, transaction_id: "TX-9002", correlation_id: "CORR-8002", workflow_id: "WF-10", student_id: 101, assessment_id: null, plan_id: 201, event_type: "STUDENT_NOTIFIED", status: "success", channel: "gmail", message: "Sent plan via email to yassine@example.com", duration_ms: 450, created_at: "2026-07-13T10:30:05Z" },
+  { id: 7, transaction_id: "TX-9003", correlation_id: "CORR-8003", workflow_id: "WF-08", student_id: 103, assessment_id: null, plan_id: 206, event_type: "TEACHER_VALIDATION", status: "success", channel: "ui", message: "Teacher rejected plan", duration_ms: 90, created_at: "2026-07-14T09:20:00Z" },
+  { id: 8, transaction_id: "TX-9003", correlation_id: "CORR-8003", workflow_id: "WF-09", student_id: 103, assessment_id: null, plan_id: 207, event_type: "PLAN_REGENERATED", status: "success", message: "Generated v2 plan based on teacher feedback", duration_ms: 3200, created_at: "2026-07-14T09:22:00Z" },
+  { id: 9, transaction_id: "TX-9004", correlation_id: "CORR-8004", workflow_id: "WF-11", student_id: 101, assessment_id: null, plan_id: 201, event_type: "ACTIVITY_UPDATED", status: "success", message: "Student completed activity 301", duration_ms: 110, created_at: "2026-07-15T15:00:00Z" },
+  { id: 10, transaction_id: "TX-9005", correlation_id: "CORR-8005", workflow_id: "WF-10", student_id: 107, assessment_id: null, plan_id: 205, event_type: "STUDENT_NOTIFIED", status: "error", channel: "slack", error_message: "Slack API rate limit exceeded", duration_ms: 500, created_at: "2026-07-16T11:00:00Z" },
+];

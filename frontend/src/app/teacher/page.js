@@ -6,12 +6,15 @@ import {
   ClipboardCheck, User, Calendar, BookOpen, Clock, Target,
   CheckCircle, RefreshCw, XCircle, ChevronDown, ChevronUp,
   ExternalLink, MessageSquare, Send, Filter,
-  FileText, Layers,
+  FileText, Layers, GitBranch, Activity, Sparkles,
 } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import StatusBadge from '@/components/StatusBadge';
 import SkillBar from '@/components/SkillBar';
-import { getAllPlans, getPlanDetail, submitDecision, regeneratePlan } from '@/services/teacherService';
+import VersionHistory from '@/components/VersionHistory';
+import DiagnosisModal from '@/components/DiagnosisModal';
+import NotificationTracker from '@/components/NotificationTracker';
+import { getAllPlans, getPlanDetail, submitDecision, regeneratePlan, getPlanVersions } from '@/services/teacherService';
 
 const TEACHER_CODE = 'T001';
 
@@ -19,6 +22,8 @@ export default function TeacherPage() {
   const [plans, setPlans] = useState([]);
   const [expandedPlan, setExpandedPlan] = useState(null);
   const [planDetail, setPlanDetail] = useState(null);
+  const [planVersions, setPlanVersions] = useState(null);
+  const [showDiagnosisModal, setShowDiagnosisModal] = useState(false);
   const [detailLoading, setDetailLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('all');
@@ -54,17 +59,27 @@ export default function TeacherPage() {
     }
   }, [loading]);
 
-  const handleExpand = async (planId) => {
+  const handleExpand = async (planId, planCode) => {
     if (expandedPlan === planId) {
       setExpandedPlan(null);
       setPlanDetail(null);
+      setPlanVersions(null);
+      setActionState({ planId: null, action: null, comment: '' });
       return;
     }
     setExpandedPlan(planId);
     setDetailLoading(true);
-    const res = await getPlanDetail(planId);
-    if (res.success) setPlanDetail(res.data);
+
+    const [detailRes, versionsRes] = await Promise.all([
+      getPlanDetail(planId),
+      getPlanVersions(planCode)
+    ]);
+    
+    if (detailRes.success) setPlanDetail(detailRes.data);
+    if (versionsRes.success) setPlanVersions(versionsRes.data);
+    
     setDetailLoading(false);
+    setActionState({ planId: null, action: null, comment: '' });
   };
 
   const handleAction = async () => {
@@ -133,8 +148,10 @@ export default function TeacherPage() {
           </div>
         </div>
 
-        {/* Filter Tabs */}
-        <div style={{
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 'var(--space-6)', alignItems: 'start' }}>
+          <div>
+            {/* Filter Tabs */}
+            <div style={{
           display: 'flex', gap: 6, marginBottom: 24, flexWrap: 'wrap',
         }}>
           {[
@@ -166,9 +183,8 @@ export default function TeacherPage() {
         {/* Plan Cards */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {filteredPlans.length === 0 && (
-            <div className="card" style={{ textAlign: 'center', padding: 48, color: 'var(--text-muted)' }}>
-              <FileText size={40} style={{ marginBottom: 12, opacity: 0.5 }} />
-              <p>No plans match the selected filter.</p>
+            <div style={{ padding: '40px 20px', textAlign: 'center', color: 'var(--text-muted)' }}>
+              No plans found matching the current filter.
             </div>
           )}
 
@@ -188,7 +204,7 @@ export default function TeacherPage() {
                     display: 'flex', alignItems: 'center', gap: 16, padding: '16px 20px',
                     cursor: 'pointer', transition: 'background 0.2s',
                   }}
-                  onClick={() => handleExpand(plan.learning_plan_id)}
+                  onClick={() => handleExpand(plan.learning_plan_id, plan.plan_code)}
                 >
                   <div style={{
                     width: 40, height: 40, borderRadius: 'var(--radius-full)',
@@ -207,9 +223,9 @@ export default function TeacherPage() {
                         <span style={{
                           fontSize: '0.7rem', color: 'var(--text-muted)',
                           padding: '1px 6px', background: 'var(--bg-elevated)',
-                          borderRadius: 'var(--radius-pill)',
+                          borderRadius: 'var(--radius-pill)', display: 'flex', alignItems: 'center', gap: 4
                         }}>
-                          v{plan.version}
+                          <GitBranch size={10} /> v{plan.version}
                         </span>
                       )}
                     </div>
@@ -247,20 +263,36 @@ export default function TeacherPage() {
                         {/* Plan Info */}
                         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginBottom: 20 }}>
                           <div style={{ padding: '12px 16px', background: 'var(--bg-card)', borderRadius: 'var(--radius-md)' }}>
-                            <div style={{ fontSize: '0.75rem', color: 'var(--accent)', fontWeight: 600, marginBottom: 4 }}>Objective</div>
-                            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{planDetail.objective_summary}</div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                              <div style={{ fontSize: '0.75rem', color: 'var(--accent)', fontWeight: 600 }}>Objective</div>
+                              {planVersions && planVersions.length > 1 && (
+                                <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                                  <GitBranch size={12} /> {planVersions.length} versions
+                                </div>
+                              )}
+                            </div>
+                            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{planDetail.plan?.objective_summary || planDetail.objective_summary}</div>
                           </div>
                           <div style={{ padding: '12px 16px', background: 'var(--bg-card)', borderRadius: 'var(--radius-md)' }}>
                             <div style={{ fontSize: '0.75rem', color: 'var(--secondary)', fontWeight: 600, marginBottom: 4 }}>Success Criteria</div>
-                            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{planDetail.success_criteria_summary}</div>
+                            <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{planDetail.plan?.success_criteria_summary || planDetail.success_criteria_summary}</div>
                           </div>
                         </div>
 
                         {/* Student Skills */}
                         {planDetail.student_context?.skills && (
                           <div style={{ marginBottom: 20 }}>
-                            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600, marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                              Student Skill Assessment
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                                Student Context & Skills
+                              </div>
+                              <button
+                                className="btn btn-ghost"
+                                style={{ padding: '4px 10px', fontSize: '0.75rem', color: 'var(--accent)' }}
+                                onClick={() => setShowDiagnosisModal(true)}
+                              >
+                                <Sparkles size={14} /> AI Insights
+                              </button>
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                               {planDetail.student_context.skills.map(skill => (
@@ -381,6 +413,9 @@ export default function TeacherPage() {
                             )}
                           </div>
                         )}
+
+                        {/* Version History timeline */}
+                        <VersionHistory versions={planVersions} />
                       </>
                     ) : null}
                   </div>
@@ -390,6 +425,17 @@ export default function TeacherPage() {
           })}
         </div>
 
+        {filteredPlans.length === 0 && (
+          <div style={{ padding: '40px 20px', textAlign: 'center', color: 'var(--text-muted)' }}>
+            No plans found matching the current filter.
+          </div>
+        )}
+        </div>
+
+        <div style={{ position: 'sticky', top: 24 }}>
+          <NotificationTracker />
+        </div>
+      </div>
         {/* Toast */}
         {toastMessage && (
           <div style={{
@@ -405,6 +451,16 @@ export default function TeacherPage() {
           </div>
         )}
       </main>
+
+      {showDiagnosisModal && planDetail?.student_context && (
+        <DiagnosisModal
+          studentName={planDetail.student_context.student?.full_name}
+          subject={planDetail.plan?.subject || planDetail.subject}
+          diagnosis={planDetail.student_context.diagnosis}
+          skills={planDetail.student_context.skills}
+          onClose={() => setShowDiagnosisModal(false)}
+        />
+      )}
     </>
   );
 }

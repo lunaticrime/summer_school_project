@@ -6,7 +6,7 @@
  * commented-out fetch() call — a one-line change per function.
  */
 
-import { MOCK_DASHBOARD } from './mockData';
+import { MOCK_DASHBOARD, MOCK_WORKFLOW_EVENTS } from './mockData';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
 
@@ -61,5 +61,35 @@ export async function getDashboardData(filters = {}) {
   return {
     success: true,
     data,
+  };
+}
+
+// ─── getWorkflowEvents ─────────────────────────────────────────
+/**
+ * Returns WF-11 / workflow_events shaped audit logs
+ * 
+ * @param  {object} [filters]                Optional filter bag
+ * @return {Promise<{success:boolean, data:object[]}>}
+ */
+export async function getWorkflowEvents(filters = {}) {
+  await delay();
+
+  // SWAP: replace the block below with ↓
+  // const params = new URLSearchParams(filters).toString();
+  // const res = await fetch(`${API_BASE}/audit/events?${params}`);
+  // return res.json();
+
+  let events = [...MOCK_WORKFLOW_EVENTS];
+  
+  if (filters.workflow_id) {
+    events = events.filter(e => e.workflow_id === filters.workflow_id);
+  }
+  
+  // Sort descending by created_at (simulated)
+  events.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+  return {
+    success: true,
+    data: events,
   };
 }

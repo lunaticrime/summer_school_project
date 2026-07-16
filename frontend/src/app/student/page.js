@@ -11,6 +11,7 @@ import Sidebar from '@/components/Sidebar';
 import ProgressRing from '@/components/ProgressRing';
 import SkillBar from '@/components/SkillBar';
 import StatusBadge from '@/components/StatusBadge';
+import DiagnosisModal from '@/components/DiagnosisModal';
 import { getStudentProgress, getStudentPlan } from '@/services/studentService';
 
 const STUDENT_CODE = 'STD001';
@@ -19,6 +20,7 @@ export default function StudentPage() {
   const [progress, setProgress] = useState(null);
   const [plan, setPlan] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showDiagnosisModal, setShowDiagnosisModal] = useState(false);
   const pageRef = useRef(null);
 
   useEffect(() => {
@@ -117,9 +119,18 @@ export default function StudentPage() {
                 <Sparkles size={18} color="var(--accent)" />
                 AI Diagnosis
               </div>
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                Model: {diagnosis?.model_name}
-              </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                  Model: {diagnosis?.model_name}
+                </span>
+                <button
+                  className="btn btn-ghost"
+                  style={{ padding: '4px 10px', fontSize: '0.75rem', color: 'var(--accent)' }}
+                  onClick={() => setShowDiagnosisModal(true)}
+                >
+                  <Activity size={14} /> Deep Dive
+                </button>
+              </div>
             </div>
 
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: 16, lineHeight: 1.7 }}>
@@ -340,6 +351,16 @@ export default function StudentPage() {
           </div>
         )}
       </main>
+
+      {showDiagnosisModal && progress && (
+        <DiagnosisModal
+          studentName={progress.student_info.full_name}
+          subject="Python"
+          diagnosis={progress.diagnosis}
+          skills={progress.skills}
+          onClose={() => setShowDiagnosisModal(false)}
+        />
+      )}
     </>
   );
 }

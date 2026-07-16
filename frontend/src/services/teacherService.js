@@ -45,6 +45,27 @@ export async function getPendingPlans(teacherCode) {
   return { success: true, data: pending };
 }
 
+// ─── getPlanVersions ────────────────────────────────────────────
+/**
+ * Returns all versions of a plan grouped by plan_code, sorted by version descending.
+ *
+ * @param  {string} planCode  e.g. "PLAN-STD003-PYTHON"
+ * @return {Promise<{success:boolean, data:object[]}>}
+ */
+export async function getPlanVersions(planCode) {
+  await delay();
+
+  // SWAP: replace the block below with ↓
+  // const res = await fetch(`${API_BASE}/plans/versions/${planCode}`);
+  // return res.json();
+
+  const versions = MOCK_LEARNING_PLANS
+    .filter(p => p.plan_code === planCode)
+    .sort((a, b) => b.version - a.version);
+
+  return { success: true, data: versions };
+}
+
 // ─── getAllPlans ─────────────────────────────────────────────────
 /**
  * All plans belonging to students of this teacher.

@@ -6,7 +6,7 @@ import {
   LayoutDashboard, Users, AlertTriangle, FileCheck, Send as SendIcon,
   TrendingUp, Clock, CheckCircle2, BarChart3, PieChart,
   ArrowUpRight, ArrowDownRight, Minus, ChevronUp, ChevronDown,
-  Search, X,
+  Search, X, Upload, ChevronRight,
 } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
@@ -15,6 +15,7 @@ import {
 import Sidebar from '@/components/Sidebar';
 import KPICard from '@/components/KPICard';
 import StatusBadge from '@/components/StatusBadge';
+import NotificationTracker from '@/components/NotificationTracker';
 import FilterBar from '@/components/FilterBar';
 import { getDashboardData } from '@/services/dashboardService';
 
@@ -474,6 +475,52 @@ export default function AdminPage() {
             </table>
           </div>
         </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: 'var(--space-6)', marginTop: 'var(--space-6)' }}>
+          {/* Bulk Import Shortcut */}
+          <div className="admin-card card" style={{
+            padding: 0, overflow: 'hidden', height: 'fit-content',
+            cursor: 'pointer',
+          transition: 'border-color 0.2s, box-shadow 0.2s',
+        }}
+          onClick={() => window.location.href = '/admin/import'}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = 'var(--accent)';
+            e.currentTarget.style.boxShadow = 'var(--shadow-glow)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = 'var(--border)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 16,
+            padding: '20px 24px',
+            background: 'linear-gradient(135deg, var(--bg-card) 0%, var(--bg-elevated) 100%)',
+          }}>
+            <div style={{
+              width: 44, height: 44, borderRadius: 'var(--radius-lg)',
+              background: 'var(--accent-dim)', display: 'flex',
+              alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+            }}>
+              <Upload size={22} color="var(--accent)" />
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 600, fontSize: '0.95rem', marginBottom: 2 }}>
+                Bulk Import Student Marks
+              </div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                Upload a CSV file to validate and prepare data for the WF-01 backend pipeline
+              </div>
+            </div>
+            <ChevronRight size={20} color="var(--text-muted)" />
+          </div>
+        </div>
+
+        <div>
+          <NotificationTracker />
+        </div>
+      </div>
       </main>
     </>
   );

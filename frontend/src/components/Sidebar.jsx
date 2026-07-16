@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { GraduationCap, ClipboardCheck, LayoutDashboard, User } from 'lucide-react';
+import { GraduationCap, ClipboardCheck, LayoutDashboard, User, Upload, Activity } from 'lucide-react';
 
 import { useRouter } from 'next/navigation';
 
@@ -191,6 +191,47 @@ function Sidebar({ activeRole, onRoleChange }) {
               );
             })}
           </ul>
+
+          {/* Admin Sub-nav */}
+          {activeRole === 'admin' && (
+            <div style={{ marginTop: 8, paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <div style={{ fontSize: 10, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b', padding: '0 14px', marginBottom: 8 }}>
+                Tools
+              </div>
+              <ul style={styles.navList}>
+                <li
+                  style={{
+                    ...styles.navItemBase,
+                    ...styles.navItemInactive,
+                    ...(hoveredItem === 'import' ? styles.navItemHover : {}),
+                  }}
+                  onClick={() => router.push('/admin/import')}
+                  onMouseEnter={() => setHoveredItem('import')}
+                  onMouseLeave={() => setHoveredItem(null)}
+                  role="button"
+                  tabIndex={0}
+                >
+                  <Upload size={20} strokeWidth={1.8} />
+                  <span style={styles.navLabel}>Import Marks</span>
+                </li>
+                <li
+                  style={{
+                    ...styles.navItemBase,
+                    ...styles.navItemInactive,
+                    ...(hoveredItem === 'audit' ? styles.navItemHover : {}),
+                  }}
+                  onClick={() => router.push('/admin/audit')}
+                  onMouseEnter={() => setHoveredItem('audit')}
+                  onMouseLeave={() => setHoveredItem(null)}
+                  role="button"
+                  tabIndex={0}
+                >
+                  <Activity size={20} strokeWidth={1.8} />
+                  <span style={styles.navLabel}>System Trace</span>
+                </li>
+              </ul>
+            </div>
+          )}
         </nav>
       </div>
 
