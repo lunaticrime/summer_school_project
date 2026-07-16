@@ -7,6 +7,7 @@ import {
   CheckCircle, RefreshCw, XCircle, ChevronDown, ChevronUp,
   ExternalLink, MessageSquare, Send, Filter,
   FileText, Layers, GitBranch, Activity, Sparkles,
+  Upload, ChevronRight,
 } from 'lucide-react';
 import Sidebar from '@/components/Sidebar';
 import StatusBadge from '@/components/StatusBadge';
@@ -145,6 +146,47 @@ export default function TeacherPage() {
               <h1>Plan Review</h1>
               <p>Review, approve, or request changes to AI-generated learning plans</p>
             </div>
+          </div>
+        </div>
+
+        {/* Bulk Import Shortcut */}
+        <div className="admin-card card" style={{
+          marginBottom: 24,
+          padding: 0, overflow: 'hidden',
+          cursor: 'pointer',
+          transition: 'border-color 0.2s, box-shadow 0.2s',
+        }}
+          onClick={() => window.location.href = '/admin/import'}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = 'var(--accent)';
+            e.currentTarget.style.boxShadow = 'var(--shadow-glow)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = 'var(--border)';
+            e.currentTarget.style.boxShadow = 'none';
+          }}
+        >
+          <div style={{
+            display: 'flex', alignItems: 'center', gap: 16,
+            padding: '20px 24px',
+            background: 'linear-gradient(135deg, var(--bg-card) 0%, var(--bg-elevated) 100%)',
+          }}>
+            <div style={{
+              width: 44, height: 44, borderRadius: 'var(--radius-lg)',
+              background: 'var(--accent-dim)', display: 'flex',
+              alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+            }}>
+              <Upload size={22} color="var(--accent)" />
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: 600, fontSize: '0.95rem', marginBottom: 2 }}>
+                Bulk Import Student Marks
+              </div>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                Upload a CSV file to validate and prepare data for the WF-01 backend pipeline
+              </div>
+            </div>
+            <ChevronRight size={20} color="var(--text-muted)" />
           </div>
         </div>
 
