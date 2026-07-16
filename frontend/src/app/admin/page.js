@@ -475,12 +475,11 @@ export default function AdminPage() {
             </table>
           </div>
         </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: 'var(--space-6)', marginTop: 'var(--space-6)' }}>
-          {/* Bulk Import Shortcut */}
-          <div className="admin-card card" style={{
-            padding: 0, overflow: 'hidden', height: 'fit-content',
-            cursor: 'pointer',
+        {/* Bulk Import Shortcut */}
+        <div className="admin-card card" style={{
+          marginTop: 'var(--space-6)',
+          padding: 0, overflow: 'hidden',
+          cursor: 'pointer',
           transition: 'border-color 0.2s, box-shadow 0.2s',
         }}
           onClick={() => window.location.href = '/admin/import'}
@@ -516,11 +515,6 @@ export default function AdminPage() {
             <ChevronRight size={20} color="var(--text-muted)" />
           </div>
         </div>
-
-        <div>
-          <NotificationTracker />
-        </div>
-      </div>
       </main>
     </>
   );

@@ -354,7 +354,7 @@ export default function StudentPage() {
 
       {showDiagnosisModal && progress && (
         <DiagnosisModal
-          studentName={progress.student_info.full_name}
+          studentName={progress.student?.full_name}
           subject="Python"
           diagnosis={progress.diagnosis}
           skills={progress.skills}
