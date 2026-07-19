@@ -31,7 +31,7 @@ The project follows an orchestrated workflow architecture built with Fusion AI.
 - Score normalization
 - Skill gap detection
 - Priority calculation
-- AI pedagogical diagnosis
+- AI pedagogical diagnosis  and many more functions . 
 
 ---
 
